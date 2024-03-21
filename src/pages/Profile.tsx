@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom"
+import { Flex, Title } from "@mantine/core"
+import { NavButton } from "../components"
+import { getSpacingUnit } from "../functions/getSpacingUnit"
 
 export const Profile = () => {
   return (
-    <div>
-      <h1>Profile</h1>
-      <Link to="/">Home</Link>
-    </div>
+    <Flex direction="column" align="start" gap={getSpacingUnit(2)}>
+      <Title order={1}>Profile</Title>
+      <NavButton to="/" text="Home" />
+    </Flex>
   )
 }
