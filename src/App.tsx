@@ -4,10 +4,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { MantineProvider, Box } from "@mantine/core"
 import { theme } from "./theme"
 import { Home, Profile } from "./pages"
-import { getSpacingUnit } from "./functions/getSpacingUnit"
+import {NavBarHeader} from "./components/NavBarHeader"
 
 const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
-  return <Box p={getSpacingUnit(4)}>{children}</Box>
+  return <Box>
+    <NavBarHeader />
+    {children}</Box>
 }
 const App = () => {
   return (
