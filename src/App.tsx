@@ -1,30 +1,31 @@
 import "@mantine/core/styles.css"
 
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom"
 import { MantineProvider, Box } from "@mantine/core"
 import { theme } from "./theme"
 import { Home, Profile } from "./pages"
 import { NavBarHeader } from "./components/NavBarHeader"
 
-const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
+const GlobalLayout = () => {
   return (
     <Box>
       <NavBarHeader />
-      {children}
+      <Outlet />
     </Box>
   )
 }
+
 const App = () => {
   return (
     <MantineProvider theme={theme}>
-      <GlobalLayout>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/profile/" element={<Profile />} />
-          </Routes>
-        </BrowserRouter>
-      </GlobalLayout>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<GlobalLayout />}>
+            <Route index element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </MantineProvider>
   )
 }
