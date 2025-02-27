@@ -1,40 +1,32 @@
-import { useState } from "react"
-import { Burger, Container, Group } from "@mantine/core"
+import { Burger, Container, Group, Button } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import classes from "./NavBar.module.css"
-
-const links = [
-  { link: "/about", label: "Features" },
-  { link: "/pricing", label: "Pricing" },
-  { link: "/learn", label: "Learn" },
-  { link: "/community", label: "Community" },
-]
+import { Link, useLocation } from "react-router-dom"
 
 export function NavBarHeader() {
   const [opened, { toggle }] = useDisclosure(false)
-  const [active, setActive] = useState(links[0].link)
-
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      data-active={active === link.link || undefined}
-      onClick={(event) => {
-        event.preventDefault()
-        setActive(link.link)
-      }}
-    >
-      {link.label}
-    </a>
-  ))
+  const location = useLocation()
+  const currentRoute = location.pathname
 
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
         <p className="placeholder">logo goes here</p>
         <Group gap={5} visibleFrom="xs">
-          {items}
+          <Button
+            component={Link}
+            to="/"
+            variant={currentRoute === "/" ? "filled" : "outline"}
+          >
+            Home
+          </Button>
+          <Button
+            component={Link}
+            to="/profile"
+            variant={currentRoute === "/profile" ? "filled" : "outline"}
+          >
+            Profile
+          </Button>
         </Group>
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </Container>
