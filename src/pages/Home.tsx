@@ -1,12 +1,15 @@
-import { Flex, Title } from "@mantine/core"
+import { Container, Flex } from "@mantine/core"
 import { getSpacingUnit } from "../functions/getSpacingUnit"
-import { FeaturedRecipes } from "../components"
+import { FeaturedRecipes } from "../components/featured_recipes"
+import SearchBar from "../components/SearchBar/SearchBar"
 
 export const Home = () => {
   return (
-    <Flex direction="column" align="start" gap={getSpacingUnit(2)}>
-      <Title order={1}>Home</Title>
-      <FeaturedRecipes />
-    </Flex>
+    <Container>
+      <Flex direction="column" align="start" gap={getSpacingUnit(2)} mx="auto">
+        <SearchBar />
+        <FeaturedRecipes />
+      </Flex>
+    </Container>
   )
 }

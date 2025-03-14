@@ -1,3 +1,3 @@
 export * from "./NavButton"
 export * from "./NavBarHeader"
-export * from "./FeaturedRecipes"
+export * from "./featured_recipes"
