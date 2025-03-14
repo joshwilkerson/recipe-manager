@@ -7,7 +7,6 @@ export const Home = () => {
   return (
     <Container>
       <Flex direction="column" align="start" gap={getSpacingUnit(2)} mx="auto">
-        <SearchBar />
         <FeaturedRecipes />
       </Flex>
     </Container>
