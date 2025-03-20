@@ -172,7 +172,7 @@ export const RecipeDetail = () => {
       <br />
       <div>
         <Button leftSection={<FaDownload />} onClick={handleDownloadClick}>
-          Download Recipe
+          Download
         </Button>
       </div>
     </Container>
