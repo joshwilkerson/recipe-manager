@@ -1,2 +1,3 @@
 export * from "./NavButton"
-export * from "./NavBarHeader.tsx"
+export * from "./NavBarHeader"
+export * from "./featured_recipes"
