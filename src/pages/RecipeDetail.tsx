@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { modals } from "@mantine/modals"
 import { notifications } from "@mantine/notifications"
-import { IconCheck, IconX } from "@tabler/icons-react"
+
 import {
   Container,
   Text,
@@ -60,7 +60,6 @@ export const RecipeDetail = () => {
         color: "green",
         title: "Success",
         message: "PDF downloaded successfully",
-        icon: <IconCheck size="1rem" />,
         autoClose: 2000,
       })
     } catch (error) {
@@ -70,7 +69,6 @@ export const RecipeDetail = () => {
         color: "red",
         title: "Error",
         message: "Failed to generate PDF",
-        icon: <IconX size="1rem" />,
         autoClose: 2000,
       })
     }
