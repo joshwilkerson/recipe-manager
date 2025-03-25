@@ -3,4 +3,5 @@ export interface Meal {
   title: string
   thumbnail: string
   instructions: string
+  ingredients: string[]
 }

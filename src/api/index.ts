@@ -18,6 +18,15 @@ export const getRandomMeal = async (): Promise<Meal | null> => {
         title: meal.strMeal,
         thumbnail: meal.strMealThumb,
         instructions: meal.strInstructions,
+        ingredients: Array.from({ length: 20 }, (_, i) => {
+          const ingredient = meal[`strIngredient${i + 1}`]
+          const measure = meal[`strMeasure${i + 1}`]
+          return ingredient && measure
+            ? `${measure.trim()} ${ingredient.trim()}`
+            : ingredient
+            ? ingredient.trim()
+            : ""
+        }).filter(Boolean),
       }
     }
     throw new Error("No meals found in the response")
@@ -42,6 +51,50 @@ export const getFeaturedRecipes = async (
     throw error
   }
 }
+export const getMealByName = async (name: string): Promise<Meal[]> => {
+  try {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
+        name
+      )}`
+    )
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    const data = await response.json()
+    if (!data.meals || data.meals.length === 0) {
+      return []
+    }
+
+    return data.meals.map((mealData: any) => {
+      const ingredients: string[] = []
+      for (let i = 1; i <= 20; i++) {
+        const ingredient = mealData[`strIngredient${i}`]
+        const measure = mealData[`strMeasure${i}`]
+
+        if (ingredient && ingredient.trim() !== "") {
+          const fullIngredient =
+            measure && measure.trim()
+              ? `${measure} ${ingredient}`.trim()
+              : ingredient.trim()
+
+          ingredients.push(fullIngredient)
+        }
+      }
+
+      return {
+        id: mealData.idMeal,
+        title: mealData.strMeal,
+        thumbnail: mealData.strMealThumb,
+        instructions: mealData.strInstructions,
+        ingredients: ingredients,
+      }
+    })
+  } catch (error) {
+    console.error("Error searching meals:", error)
+    throw error
+  }
+}
 
 export const getMealById = async (id: string): Promise<Meal | null> => {
   try {
@@ -59,12 +112,29 @@ export const getMealById = async (id: string): Promise<Meal | null> => {
       return null
     }
 
-    const meal = data.meals[0]
+    const mealData = data.meals[0]
+
+    const ingredients: string[] = []
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = mealData[`strIngredient${i}`]
+      const measure = mealData[`strMeasure${i}`]
+
+      if (ingredient && ingredient.trim() !== "") {
+        const fullIngredient =
+          measure && measure.trim()
+            ? `${measure} ${ingredient}`.trim()
+            : ingredient.trim()
+
+        ingredients.push(fullIngredient)
+      }
+    }
+
     return {
-      id: meal.idMeal,
-      title: meal.strMeal,
-      thumbnail: meal.strMealThumb,
-      instructions: meal.strInstructions,
+      id: mealData.idMeal,
+      title: mealData.strMeal,
+      thumbnail: mealData.strMealThumb,
+      instructions: mealData.strInstructions,
+      ingredients: ingredients,
     }
   } catch (error) {
     console.error("Error fetching meal by ID:", error)
