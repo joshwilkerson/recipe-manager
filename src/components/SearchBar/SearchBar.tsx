@@ -5,13 +5,13 @@ import type { Meal } from "../../types"
 import { IoClose, IoSearchOutline } from "react-icons/io5"
 import styles from "./SearchBar.module.css"
 import { Input, CloseButton, Box, Loader } from "@mantine/core"
-import { useNavigate } from "react-router-dom" // Add this import
+import { useNavigate } from "react-router-dom"
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<Meal[]>([])
-  const navigate = useNavigate() // Add this hook
+  const navigate = useNavigate()
 
   const searchMeals = async (query: string) => {
     if (!query.trim()) {
@@ -47,10 +47,9 @@ const SearchBar = () => {
     setSearchResults([])
   }
 
-  // Add this function to handle recipe click
   const handleRecipeClick = (mealId: string) => {
     navigate(`/recipe/${mealId}`)
-    handleClear() // Clear the search after navigation
+    handleClear()
   }
 
   return (

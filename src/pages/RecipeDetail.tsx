@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { modals } from "@mantine/modals"
 import { notifications } from "@mantine/notifications"
-
 import {
   Container,
   Text,
@@ -65,7 +64,7 @@ export const RecipeDetail = () => {
     } catch (error) {
       console.error("PDF generation failed:", error)
       notifications.update({
-        id: "download-start",
+        id: "download-error",
         color: "red",
         title: "Error",
         message: "Failed to generate PDF",
@@ -113,66 +112,54 @@ export const RecipeDetail = () => {
     fetchMeal()
   }, [id])
 
-  if (isLoading) {
-    return (
-      <Container>
+  return (
+    <Container>
+      {isLoading ? (
         <Box
           style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
         >
           <Loader size="xl" />
         </Box>
-      </Container>
-    )
-  }
+      ) : (
+        <>
+          {error || !meal ? (
+            <Text c="red" size="lg" ta="center">
+              {error || "Recipe not found"}
+            </Text>
+          ) : (
+            <>
+              <Title order={1} mb="md">
+                {meal.title}
+              </Title>
+              <Box mb="xl">
+                <Image src={meal.thumbnail} alt={meal.title} radius="md" />
+              </Box>
 
-  if (error || !meal) {
-    return (
-      <Container>
-        <Text c="red" size="lg" ta="center">
-          {error || "Recipe not found"}
-        </Text>
-      </Container>
-    )
-  }
+              <Title order={2} mb="md">
+                Ingredients:
+              </Title>
+              <List mb="xl">
+                {meal.ingredients.map((ingredient, index) => (
+                  <List.Item key={index}>{ingredient}</List.Item>
+                ))}
+              </List>
 
-  return (
-    <Container size="lg" py="xl">
-      <Title order={1} mb="md">
-        {meal.title}
-      </Title>
+              <Title order={2} mb="md">
+                Instructions:
+              </Title>
+              <Text>{meal.instructions}</Text>
 
-      <Image
-        src={meal.thumbnail}
-        alt={meal.title}
-        radius="md"
-        h={500}
-        w={500}
-        fit="contain"
-        mb="xl"
-      />
-      <Box mb="xl">
-        <Text size="lg" fw={700} mb="xs">
-          Ingredients:
-        </Text>
-        <List>
-          {meal.ingredients.map((ingredient, index) => (
-            <List.Item key={index}>{ingredient}</List.Item>
-          ))}
-        </List>
-      </Box>
-
-      <Box>
-        <Text size="lg" fw={700} mb="xs">
-          Instructions:
-        </Text>
-        <Text size="md">{meal.instructions}</Text>
-      </Box>
-      <br />
-      <div>
-        <Button leftSection={<FaDownload />} onClick={handleDownloadClick}>
-          Download Recipe
-        </Button>
-      </div>
+              <Button
+                leftSection={<FaDownload />}
+                onClick={handleDownloadClick}
+                mt="xl"
+              >
+                Download Recipe
+              </Button>
+            </>
+          )}
+        </>
+      )}
     </Container>
   )
 }
