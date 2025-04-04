@@ -1,14 +1,17 @@
 import { useState, useCallback } from "react"
 import debounce from "lodash/debounce"
-import { MealDbService, Meal } from "../../services/mealDbService"
+import { getMealByName } from "../../api"
+import type { Meal } from "../../types"
 import { IoClose, IoSearchOutline } from "react-icons/io5"
 import styles from "./SearchBar.module.css"
 import { Input, CloseButton, Box, Loader } from "@mantine/core"
+import { useNavigate } from "react-router-dom"
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<Meal[]>([])
+  const navigate = useNavigate()
 
   const searchMeals = async (query: string) => {
     if (!query.trim()) {
@@ -18,7 +21,7 @@ const SearchBar = () => {
 
     try {
       setIsLoading(true)
-      const results = await MealDbService.searchMealByName(query)
+      const results = await getMealByName(query)
       setSearchResults(results || [])
     } catch (error) {
       console.error("Error searching meals:", error)
@@ -42,6 +45,11 @@ const SearchBar = () => {
   const handleClear = () => {
     setSearchQuery("")
     setSearchResults([])
+  }
+
+  const handleRecipeClick = (mealId: string) => {
+    navigate(`/recipe/${mealId}`)
+    handleClear()
   }
 
   return (
@@ -73,7 +81,14 @@ const SearchBar = () => {
               ) : searchResults.length > 0 ? (
                 <div className={styles.searchResults}>
                   {searchResults.map((meal) => (
-                    <div key={meal.id} className={styles.searchResultItem}>
+                    <div
+                      key={meal.id}
+                      className={styles.searchResultItem}
+                      onClick={() => handleRecipeClick(meal.id)}
+                      role="button"
+                      tabIndex={0}
+                      style={{ cursor: "pointer" }}
+                    >
                       <span className={styles.resultTitle}>{meal.title}</span>
                     </div>
                   ))}
