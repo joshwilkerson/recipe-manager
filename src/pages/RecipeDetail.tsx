@@ -11,8 +11,6 @@ import {
   Box,
   List,
   Button,
-  Grid,
-  Stack,
 } from "@mantine/core"
 import { FaDownload } from "react-icons/fa6"
 import { getMealById } from "../api"
@@ -133,38 +131,31 @@ export const RecipeDetail = () => {
               <Title order={1} mb="md">
                 {meal.title}
               </Title>
-              <Grid gutter="xl">
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Stack gap="md">
-                    <Image
-                      src={meal.thumbnail}
-                      alt={meal.title}
-                      width="100%"
-                      height={425}
-                      fit="contain"
-                    />
-                    <Title order={2}>Ingredients:</Title>
-                    <List>
-                      {meal.ingredients.map((ingredient, index) => (
-                        <List.Item key={index}>{ingredient}</List.Item>
-                      ))}
-                    </List>
-                  </Stack>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 6 }}>
-                  <Stack gap="md">
-                    <Title order={2}>Instructions:</Title>
-                    <Text>{meal.instructions}</Text>
-                    <Button
-                      leftSection={<FaDownload />}
-                      onClick={handleDownloadClick}
-                      mt="xl"
-                    >
-                      Download Recipe
-                    </Button>
-                  </Stack>
-                </Grid.Col>
-              </Grid>
+              <Box mb="xl">
+                <Image src={meal.thumbnail} alt={meal.title} radius="md" />
+              </Box>
+
+              <Title order={2} mb="md">
+                Ingredients:
+              </Title>
+              <List mb="xl">
+                {meal.ingredients.map((ingredient, index) => (
+                  <List.Item key={index}>{ingredient}</List.Item>
+                ))}
+              </List>
+
+              <Title order={2} mb="md">
+                Instructions:
+              </Title>
+              <Text>{meal.instructions}</Text>
+
+              <Button
+                leftSection={<FaDownload />}
+                onClick={handleDownloadClick}
+                mt="xl"
+              >
+                Download Recipe
+              </Button>
             </>
           )}
         </>
