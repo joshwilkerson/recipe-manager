@@ -7,6 +7,7 @@ import { Home, Profile } from "./pages"
 import { NavBarHeader } from "./components/NavBarHeader"
 import { RecipeDetail } from "./pages/RecipeDetail"
 import { ModalsProvider } from "@mantine/modals"
+import { CategoryList } from "./components/CategoryList/CategoryList"
 
 const GlobalLayout = () => {
   return (
@@ -26,8 +27,8 @@ const App = () => {
             <Route path="/" element={<GlobalLayout />}>
               <Route index element={<Home />} />
               <Route path="profile" element={<Profile />} />
-
-              <Route path="/recipe/:id" element={<RecipeDetail />} />
+              <Route path="recipe/:id" element={<RecipeDetail />} />
+              <Route path="category/:categoryName" element={<CategoryList />} />
             </Route>
           </Routes>
         </BrowserRouter>
