@@ -141,3 +141,58 @@ export const getMealById = async (id: string): Promise<Meal | null> => {
     throw error
   }
 }
+export const getMealByCategory = async (category: string): Promise<Meal[]> => {
+  try {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
+        category
+      )}`
+    )
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    const data = await response.json()
+    if (!data.meals || data.meals.length === 0) {
+      return []
+    }
+
+    return data.meals.map((meal: any) => ({
+      id: meal.idMeal,
+      title: meal.strMeal,
+      thumbnail: meal.strMealThumb,
+      instructions: "",
+      ingredients: [],
+    }))
+  } catch (error) {
+    console.error("Error fetching meals by category:", error)
+    throw error
+  }
+}
+
+export const getMealByArea = async (area: string): Promise<Meal[]> => {
+  try {
+    const response = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
+        area
+      )}`
+    )
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    const data = await response.json()
+    if (!data.meals || data.meals.length === 0) {
+      return []
+    }
+
+    return data.meals.map((meal: any) => ({
+      id: meal.idMeal,
+      title: meal.strMeal,
+      thumbnail: meal.strMealThumb,
+      instructions: "",
+      ingredients: [],
+    }))
+  } catch (error) {
+    console.error("Error fetching meals by area:", error)
+    throw error
+  }
+}

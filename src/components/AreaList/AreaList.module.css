@@ -1,0 +1,53 @@
+.areaContainer {
+  padding: 2rem 0;
+}
+
+.areaSection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  margin-bottom: 1.5rem;
+  color: var(--mantine-color-gray-7);
+}
+
+.areaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.areaButton {
+  text-transform: capitalize;
+  transition: all 0.2s ease;
+}
+
+.areaButton:hover {
+  transform: translateY(-1px);
+}
+
+.mealsSection {
+  margin-top: 2rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+@media (max-width: 768px) {
+  .areaContainer {
+    padding: 1rem 0;
+  }
+
+  .areaButtons {
+    justify-content: center;
+  }
+
+  .areaButton {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

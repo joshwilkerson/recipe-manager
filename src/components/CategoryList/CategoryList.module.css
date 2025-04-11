@@ -1,0 +1,57 @@
+.categoryContainer {
+  padding: 2rem 0;
+}
+
+.categorySection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  margin-bottom: 1.5rem;
+  color: var(--mantine-color-gray-7);
+}
+
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.categoryButton {
+  text-transform: capitalize;
+  transition: all 0.2s ease;
+}
+
+.categoryButton:hover {
+  transform: translateY(-1px);
+}
+
+.clearButton:hover {
+  transform: translateY(-1px);
+}
+
+.mealsSection {
+  margin-top: 2rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+@media (max-width: 768px) {
+  .categoryContainer {
+    padding: 1rem 0;
+  }
+
+  .categoryButtons {
+    justify-content: center;
+  }
+
+  .categoryButton {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

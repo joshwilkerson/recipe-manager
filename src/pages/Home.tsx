@@ -1,13 +1,18 @@
 import { Container, Flex } from "@mantine/core"
 import { getSpacingUnit } from "../functions/getSpacingUnit"
 import { FeaturedRecipes } from "../components/featured_recipes"
-import SearchBar from "../components/SearchBar/SearchBar"
+import classes from "./Home.module.css"
 
 export const Home = () => {
   return (
-    <Container>
-      <Flex direction="column" align="start" gap={getSpacingUnit(2)} mx="auto">
-        <SearchBar />
+    <Container size="xl" className={classes.container}>
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        gap={getSpacingUnit(2)}
+        className={classes.content}
+      >
         <FeaturedRecipes />
       </Flex>
     </Container>
