@@ -143,6 +143,7 @@ export const getMealById = async (id: string): Promise<Meal | null> => {
 }
 export const getMealByCategory = async (category: string): Promise<Meal[]> => {
   try {
+    console.log("Fetching meals for category:", category)
     const response = await fetch(
       `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
         category
@@ -152,19 +153,34 @@ export const getMealByCategory = async (category: string): Promise<Meal[]> => {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
     const data = await response.json()
+    console.log("Initial API response:", data)
+
     if (!data.meals || data.meals.length === 0) {
       return []
     }
 
-    return data.meals.map((meal: any) => ({
-      id: meal.idMeal,
-      title: meal.strMeal,
-      thumbnail: meal.strMealThumb,
-      instructions: "",
-      ingredients: [],
-    }))
+    const detailedMeals = await Promise.all(
+      data.meals.map(async (mealData: any) => {
+        try {
+          const detailedMeal = await getMealById(mealData.idMeal)
+          return detailedMeal
+        } catch (error) {
+          console.error(
+            `Error fetching details for meal ${mealData.idMeal}:`,
+            error
+          )
+          return null
+        }
+      })
+    )
+
+    const validMeals = detailedMeals.filter(
+      (meal): meal is Meal => meal !== null
+    )
+    console.log("Final meals with details:", validMeals)
+    return validMeals
   } catch (error) {
-    console.error("Error fetching meals by category:", error)
+    console.error("Error in getMealByCategory:", error)
     throw error
   }
 }
@@ -183,7 +199,6 @@ export const getMealByArea = async (area: string): Promise<Meal[]> => {
     if (!data.meals || data.meals.length === 0) {
       return []
     }
-
     return data.meals.map((meal: any) => ({
       id: meal.idMeal,
       title: meal.strMeal,
@@ -192,7 +207,7 @@ export const getMealByArea = async (area: string): Promise<Meal[]> => {
       ingredients: [],
     }))
   } catch (error) {
-    console.error("Error fetching meals by area:", error)
+    console.error("Error fetching meals by cuisine:", error)
     throw error
   }
 }
