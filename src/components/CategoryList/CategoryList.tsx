@@ -1,156 +1,172 @@
 import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import {
-  Button,
-  SimpleGrid,
   Title,
+  SimpleGrid,
+  Card,
+  Image,
+  Text,
   Loader,
   Alert,
-  Group,
+  Button,
   Container,
-  Center,
+  Select,
 } from "@mantine/core"
-import { getMealByCategory } from "../../api"
+import { getMealByCategory, getCuisines, getCategories } from "../../api"
 import type { Meal } from "../../types"
-import { getSpacingUnit } from "../../functions/getSpacingUnit"
-import { FeaturedRecipesCard } from "../featured_recipes/card"
 import styles from "./CategoryList.module.css"
 
-const INITIAL_DISPLAY_COUNT = 4
-
-const CATEGORIES = [
-  "Beef",
-  "Chicken",
-  "Dessert",
-  "Lamb",
-  "Pasta",
-  "Pork",
-  "Seafood",
-  "Side",
-  "Starter",
-  "Vegan",
-  "Vegetarian",
-  "Breakfast",
-  "Goat",
-  "Miscellaneous",
-] as const
-
-type Category = (typeof CATEGORIES)[number]
-
 export const CategoryList = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Category | "">("")
+  const { categoryName } = useParams<{ categoryName: string }>()
+  const navigate = useNavigate()
   const [meals, setMeals] = useState<Meal[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT)
+  const [cuisines, setCuisines] = useState<string[]>([])
+  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
     const fetchMeals = async () => {
-      if (!selectedCategory) return
+      if (!categoryName) return
 
       setLoading(true)
       setError(null)
       try {
-        const fetchedMeals = await getMealByCategory(selectedCategory)
+        console.log("Fetching meals for category:", categoryName)
+        const fetchedMeals = await getMealByCategory(categoryName)
+        console.log("Fetched meals:", fetchedMeals)
         setMeals(fetchedMeals)
       } catch (error) {
-        setError("Error loading meals. Please try again.")
         console.error("Error fetching meals:", error)
+        setError("Error loading meals. Please try again.")
       } finally {
         setLoading(false)
       }
     }
 
     fetchMeals()
-    setDisplayCount(INITIAL_DISPLAY_COUNT)
-  }, [selectedCategory])
+  }, [categoryName])
 
-  const handleCategorySelect = (category: Category) => {
-    setSelectedCategory(category)
+  useEffect(() => {
+    const fetchCuisines = async () => {
+      try {
+        const fetchedCuisines = await getCuisines()
+        setCuisines(fetchedCuisines)
+      } catch (error) {
+        console.error("Error fetching cuisines:", error)
+      }
+    }
+    fetchCuisines()
+  }, [])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories()
+        setCategories(fetchedCategories)
+      } catch (error) {
+        console.error("Error fetching categories:", error)
+      }
+    }
+    fetchCategories()
+  }, [])
+
+  const handleRecipeClick = (mealId: string) => {
+    navigate(`/recipe/${mealId}`)
   }
 
-  const handleViewMore = () => {
-    setDisplayCount(meals.length)
+  const handleCuisineChange = (value: string | null) => {
+    if (value) {
+      navigate(`/cuisine/${value}`)
+    }
   }
 
-  const handleClearCategory = () => {
-    setSelectedCategory("")
-    setMeals([])
-    setDisplayCount(INITIAL_DISPLAY_COUNT)
+  const handleCategoryChange = (value: string | null) => {
+    if (value) {
+      navigate(`/category/${value}`)
+    }
   }
 
-  const displayedMeals = meals.slice(0, displayCount)
-  const hasMoreMeals = meals.length > displayCount
+  if (!categoryName) {
+    return (
+      <Container>
+        <Alert color="red" title="Error">
+          No category specified
+        </Alert>
+      </Container>
+    )
+  }
 
   return (
-    <Container size="xl" className={styles.categoryContainer}>
-      <section className={styles.categorySection}>
-        <Title order={2} className={styles.sectionTitle}>
-          Browse by Category
+    <Container>
+      <div className={styles.listContainer}>
+        <Title order={2} className={styles.listTitle}>
+          {categoryName} Recipes
         </Title>
 
-        <Group gap="xs" className={styles.categoryButtons}>
-          {CATEGORIES.map((category) => (
+        {error && (
+          <Alert variant="light" color="red" title="Something went wrong">
             <Button
-              key={category}
-              variant={selectedCategory === category ? "filled" : "outline"}
-              onClick={() => handleCategorySelect(category)}
-              className={styles.categoryButton}
+              variant="filled"
+              color="blue"
+              onClick={() => window.location.reload()}
             >
-              {category}
+              Retry
             </Button>
-          ))}
-          <Button
-            variant="outline"
-            onClick={handleClearCategory}
-            className={styles.clearButton}
+          </Alert>
+        )}
+
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              padding: "2rem",
+            }}
           >
-            Clear
-          </Button>
-        </Group>
-      </section>
-
-      {selectedCategory && (
-        <section className={styles.mealsSection}>
-          <Title order={3} className={styles.sectionTitle}>
-            {selectedCategory} Recipes
-          </Title>
-
-          {error && (
-            <Alert variant="light" color="red" title="Something went wrong">
-              {error}
-            </Alert>
-          )}
-
-          {loading ? (
-            <div className={styles.loadingContainer}>
-              <Loader size="xl" />
-            </div>
-          ) : (
-            <>
-              <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="lg">
-                {displayedMeals.map((meal) => (
-                  <FeaturedRecipesCard
-                    key={meal.id}
-                    id={meal.id}
-                    imageUrl={meal.thumbnail}
-                    title={meal.title}
-                    description=""
-                    isLoading={false}
+            <Loader size="xl" />
+          </div>
+        ) : meals.length === 0 ? (
+          <Alert color="yellow" title="No recipes found">
+            No recipes found for this category. Please try another category.
+          </Alert>
+        ) : (
+          <SimpleGrid
+            cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+            className={styles.listGrid}
+          >
+            {meals.map((meal) => (
+              <Card
+                key={meal.id}
+                className={styles.categoryCard}
+                onClick={() => handleRecipeClick(meal.id)}
+                shadow="sm"
+                padding="lg"
+                radius="md"
+                withBorder
+              >
+                <Card.Section>
+                  <Image
+                    src={meal.thumbnail}
+                    height={160}
+                    alt={meal.title}
+                    className={styles.categoryImage}
                   />
-                ))}
-              </SimpleGrid>
+                </Card.Section>
 
-              {hasMoreMeals && (
-                <Center mt={getSpacingUnit(3)}>
-                  <Button onClick={handleViewMore} variant="outline" size="md">
-                    View More {selectedCategory} Recipes
-                  </Button>
-                </Center>
-              )}
-            </>
-          )}
-        </section>
-      )}
+                <Text
+                  fw={500}
+                  size="lg"
+                  mt="md"
+                  className={styles.categoryName}
+                >
+                  {meal.title}
+                </Text>
+              </Card>
+            ))}
+          </SimpleGrid>
+        )}
+      </div>
     </Container>
   )
 }
