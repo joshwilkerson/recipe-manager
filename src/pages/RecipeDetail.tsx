@@ -11,11 +11,13 @@ import {
   Box,
   List,
   Button,
+  Grid,
 } from "@mantine/core"
 import { FaDownload } from "react-icons/fa6"
 import { getMealById } from "../api"
 import type { Meal } from "../types"
 import { jsPDF } from "jspdf"
+import styles from "./RecipeDetail.module.css"
 
 export const RecipeDetail = () => {
   const { id } = useParams()
@@ -113,7 +115,7 @@ export const RecipeDetail = () => {
   }, [id])
 
   return (
-    <Container>
+    <Container className={styles.container}>
       {isLoading ? (
         <Box
           style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
@@ -128,31 +130,39 @@ export const RecipeDetail = () => {
             </Text>
           ) : (
             <>
-              <Title order={1} mb="md">
+              <Title order={1} className={styles.title}>
                 {meal.title}
               </Title>
-              <Box mb="xl">
-                <Image src={meal.thumbnail} alt={meal.title} radius="md" />
-              </Box>
-
-              <Title order={2} mb="md">
-                Ingredients:
-              </Title>
-              <List mb="xl">
-                {meal.ingredients.map((ingredient, index) => (
-                  <List.Item key={index}>{ingredient}</List.Item>
-                ))}
-              </List>
-
-              <Title order={2} mb="md">
-                Instructions:
-              </Title>
-              <Text>{meal.instructions}</Text>
+              <Grid gutter={0}>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Image
+                    src={meal.thumbnail}
+                    alt={meal.title}
+                    className={styles.image}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Title order={2} mb="xs">
+                    Ingredients:
+                  </Title>
+                  <List className={styles.ingredients}>
+                    {meal.ingredients.map((ingredient, index) => (
+                      <List.Item key={index}>{ingredient}</List.Item>
+                    ))}
+                  </List>
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  <Title order={2} mb="xs" className={styles.instructions}>
+                    Instructions:
+                  </Title>
+                  <Text>{meal.instructions}</Text>
+                </Grid.Col>
+              </Grid>
 
               <Button
                 leftSection={<FaDownload />}
                 onClick={handleDownloadClick}
-                mt="xl"
+                className={styles.downloadButton}
               >
                 Download Recipe
               </Button>
