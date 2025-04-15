@@ -1,8 +1,7 @@
-import { Burger, Container, Group, Button, Image, Text } from "@mantine/core"
+import { Burger, Container, Group, Button, Text } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import classes from "./NavBar.module.css"
 import { Link, useLocation } from "react-router-dom"
-import GurometGuideLogo from "../pictures/GurometGuide.jpeg"
 
 export function NavBarHeader() {
   const [opened, { toggle }] = useDisclosure(false)
@@ -12,11 +11,9 @@ export function NavBarHeader() {
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <Group gap="sm">
-          <Text fw={600} size="lg">
-            Gourmet Guides
-          </Text>
-        </Group>
+        <Text fw={700} size="lg">
+          Gournet Guides
+        </Text>
         <Group gap={5} visibleFrom="xs">
           <Button
             component={Link}
@@ -24,13 +21,6 @@ export function NavBarHeader() {
             variant={currentRoute === "/" ? "filled" : "outline"}
           >
             Home
-          </Button>
-          <Button
-            component={Link}
-            to="/profile"
-            variant={currentRoute === "/profile" ? "filled" : "outline"}
-          >
-            Recipes
           </Button>
         </Group>
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
