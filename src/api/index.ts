@@ -185,12 +185,38 @@ export const getMealByCategory = async (category: string): Promise<Meal[]> => {
   }
 }
 
-export const getMealByArea = async (area: string): Promise<Meal[]> => {
+export const getMealByCuisine = async (cuisine: string): Promise<Meal[]> => {
+  const response = await fetch(
+    `https://www.themealdb.com/api/json/v1/1/filter.php?a=${cuisine}`
+  )
+  const data = await response.json()
+  return data.meals.map((meal: any) => ({
+    id: meal.idMeal,
+    title: meal.strMeal,
+    thumbnail: meal.strMealThumb,
+  }))
+}
+
+export const getCuisines = async (): Promise<string[]> => {
   try {
     const response = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
-        area
-      )}`
+      "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
+    )
+    if (!response.ok) {
+      throw new Error("Failed to fetch cuisines")
+    }
+    const data = await response.json()
+    return data.meals.map((meal: any) => meal.strArea)
+  } catch (error) {
+    console.error("Error fetching cuisines:", error)
+    throw error
+  }
+}
+
+export const getCategories = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/list.php?c=list"
     )
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
@@ -199,15 +225,10 @@ export const getMealByArea = async (area: string): Promise<Meal[]> => {
     if (!data.meals || data.meals.length === 0) {
       return []
     }
-    return data.meals.map((meal: any) => ({
-      id: meal.idMeal,
-      title: meal.strMeal,
-      thumbnail: meal.strMealThumb,
-      instructions: "",
-      ingredients: [],
-    }))
+
+    return data.meals.map((category: any) => category.strCategory)
   } catch (error) {
-    console.error("Error fetching meals by cuisine:", error)
+    console.error("Error fetching categories:", error)
     throw error
   }
 }
