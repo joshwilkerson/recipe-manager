@@ -8,6 +8,8 @@ import { NavBarHeader } from "./components/NavBarHeader"
 import { RecipeDetail } from "./pages/RecipeDetail"
 import { ModalsProvider } from "@mantine/modals"
 import { CategoryList } from "./components/CategoryList/CategoryList"
+import { CuisineList } from "./components/CuisineList/CuisineList"
+import { Link } from "react-router-dom"
 
 const GlobalLayout = () => {
   return (
@@ -29,6 +31,7 @@ const App = () => {
               <Route path="profile" element={<Profile />} />
               <Route path="recipe/:id" element={<RecipeDetail />} />
               <Route path="category/:categoryName" element={<CategoryList />} />
+              <Route path="cuisine/:CuisineName" element={<CuisineList />} />
             </Route>
           </Routes>
         </BrowserRouter>
