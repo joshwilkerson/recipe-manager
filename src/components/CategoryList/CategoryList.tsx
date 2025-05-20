@@ -15,6 +15,7 @@ import {
 import { getMealByCategory, getCuisines, getCategories } from "../../api"
 import type { Meal } from "../../types"
 import styles from "./CategoryList.module.css"
+import { handleRecipeClick } from "../../shared/recipeUtils"
 
 export const CategoryList = () => {
   const { categoryName } = useParams<{ categoryName: string }>()
@@ -71,8 +72,8 @@ export const CategoryList = () => {
     fetchCategories()
   }, [])
 
-  const handleRecipeClick = (mealId: string) => {
-    navigate(`/recipe/${mealId}`)
+  const onRecipeClick = (meal: Meal) => {
+    handleRecipeClick({ idMeal: meal.id, strMeal: meal.title } as any, navigate)
   }
 
   const handleCuisineChange = (value: string | null) => {
@@ -139,7 +140,7 @@ export const CategoryList = () => {
               <Card
                 key={meal.id}
                 className={styles.categoryCard}
-                onClick={() => handleRecipeClick(meal.id)}
+                onClick={() => onRecipeClick(meal)}
                 shadow="sm"
                 padding="lg"
                 radius="md"

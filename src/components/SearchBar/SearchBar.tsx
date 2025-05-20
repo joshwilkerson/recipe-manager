@@ -6,6 +6,7 @@ import { IoClose, IoSearchOutline } from "react-icons/io5"
 import styles from "./SearchBar.module.css"
 import { Input, CloseButton, Box, Loader } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
+import { handleRecipeClick } from "../../shared/recipeUtils"
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("")
@@ -47,8 +48,8 @@ const SearchBar = () => {
     setSearchResults([])
   }
 
-  const handleRecipeClick = (mealId: string) => {
-    navigate(`/recipe/${mealId}`)
+  const onRecipeClick = (meal: Meal) => {
+    handleRecipeClick({ idMeal: meal.id, strMeal: meal.title } as any, navigate)
     handleClear()
   }
 
@@ -84,7 +85,7 @@ const SearchBar = () => {
                     <div
                       key={meal.id}
                       className={styles.searchResultItem}
-                      onClick={() => handleRecipeClick(meal.id)}
+                      onClick={() => onRecipeClick(meal)}
                       role="button"
                       tabIndex={0}
                       style={{ cursor: "pointer" }}
