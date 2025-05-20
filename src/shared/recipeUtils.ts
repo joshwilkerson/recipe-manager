@@ -1,10 +1,5 @@
 import { Recipe } from "../types"
 
-/**
- * Handles recipe click navigation
- * @param recipe - The recipe object
- * @param navigate - Navigation function from react-router-dom
- */
 export const handleRecipeClick = (
   recipe: Recipe,
   navigate: (path: string) => void
@@ -12,11 +7,6 @@ export const handleRecipeClick = (
   navigate(`/recipe/${recipe.idMeal}`)
 }
 
-/**
- * Formats recipe data from API response
- * @param data - Raw recipe data from API
- * @returns Formatted recipe object
- */
 export const formatRecipeData = (data: any): Recipe => {
   return {
     idMeal: data.idMeal,
