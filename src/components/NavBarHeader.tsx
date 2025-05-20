@@ -12,7 +12,7 @@ export function NavBarHeader() {
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
         <Text fw={700} size="lg">
-          Gournet Guides
+          Gourmet Guides
         </Text>
         <Group gap={5} visibleFrom="xs">
           <Button
