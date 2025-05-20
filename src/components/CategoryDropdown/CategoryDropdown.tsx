@@ -35,7 +35,12 @@ export const CategoryDropdown = () => {
 
   return (
     <Select
-      label="Browse by Category"
+      label="Browse by category"
+      placeholder="Select a category"
+      data={categories}
+      onChange={handleCategoryChange}
+      searchable
+      clearable
       styles={{
         label: {
           textAlign: "left",
@@ -45,12 +50,6 @@ export const CategoryDropdown = () => {
           width: "100%",
         },
       }}
-      placeholder="Select a category"
-      data={categories}
-      onChange={handleCategoryChange}
-      disabled={loading}
-      rightSection={loading ? <Loader size="xs" /> : null}
-      error={error}
     />
   )
 }
