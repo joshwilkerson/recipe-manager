@@ -1,4 +1,4 @@
-import { Burger, Container, Group, Button } from "@mantine/core"
+import { Burger, Container, Group, Button, Text } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import classes from "./NavBar.module.css"
 import { Link, useLocation } from "react-router-dom"
@@ -11,7 +11,9 @@ export function NavBarHeader() {
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <p className="placeholder">logo goes here</p>
+        <Text fw={700} size="lg">
+          Gourmet Guides
+        </Text>
         <Group gap={5} visibleFrom="xs">
           <Button
             component={Link}
@@ -19,13 +21,6 @@ export function NavBarHeader() {
             variant={currentRoute === "/" ? "filled" : "outline"}
           >
             Home
-          </Button>
-          <Button
-            component={Link}
-            to="/profile"
-            variant={currentRoute === "/profile" ? "filled" : "outline"}
-          >
-            Profile
           </Button>
         </Group>
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />

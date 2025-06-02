@@ -1,0 +1,26 @@
+.container {
+  padding: 1rem;
+}
+
+.title {
+  margin-bottom: 1rem;
+}
+
+.image {
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.ingredients {
+  padding-left: 1rem;
+}
+
+.instructions {
+  margin-top: 1rem;
+}
+
+.downloadButton {
+  margin-top: 2rem;
+}

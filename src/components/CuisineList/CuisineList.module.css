@@ -1,0 +1,32 @@
+.cuisineContainer {
+  padding: 2rem;
+}
+
+.cuisineTitle {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cuisineGrid {
+  margin-top: 1rem;
+}
+
+.cuisineCard {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.cuisineCard:hover {
+  transform: translateY(-5px);
+}
+
+.cuisineImage {
+  object-fit: cover;
+}
+
+.cuisineName {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

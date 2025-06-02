@@ -10,82 +10,90 @@ export const FeaturedRecipes = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const numberOfFeaturedRecipes = 3
-  const descriptionLength = Math.round(100 * (3 / numberOfFeaturedRecipes))
+  const numberOfRecipes = 3
+
+  const checkForDuplicates = (recipes: Meal[]) => {
+    const seenIds = new Set()
+    for (const recipe of recipes) {
+      if (seenIds.has(recipe.id)) {
+        return true
+      }
+      seenIds.add(recipe.id)
+    }
+    return false
+  }
+
+  const getRecipes = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      let recipes = await getFeaturedRecipes(numberOfRecipes)
+
+      let tries = 0
+      while (checkForDuplicates(recipes) && tries < 5) {
+        recipes = await getFeaturedRecipes(numberOfRecipes)
+        tries++
+      }
+
+      setMeals(recipes)
+    } catch (err) {
+      setError("Sorry, we couldn't load the recipes. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchMeals = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const fetchedMeals = await getFeaturedRecipes(numberOfFeaturedRecipes)
-        setMeals(fetchedMeals)
-      } catch (error) {
-        setError("Error loading meals. Please try again.")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchMeals()
+    getRecipes()
   }, [])
 
-  const defaultCardProps = {
+  const emptyCard = {
     description: "",
     id: "",
     imageUrl: "",
     title: "",
   }
 
+  const loadingCards = Array(numberOfRecipes)
+    .fill(0)
+    .map((_, index) => (
+      <FeaturedRecipesCard key={index} isLoading={true} {...emptyCard} />
+    ))
+
+  const recipeCards = meals.map((meal) => {
+    const shortDescription =
+      meal.instructions.length > 100
+        ? meal.instructions.slice(0, 100) + "..."
+        : meal.instructions
+
+    return (
+      <FeaturedRecipesCard
+        key={meal.id}
+        id={meal.id}
+        imageUrl={meal.thumbnail}
+        title={meal.title}
+        description={shortDescription}
+        isLoading={false}
+      />
+    )
+  })
+
   return (
     <Flex gap={getSpacingUnit(2)} direction="column">
       <Title order={2}>Featured Recipes</Title>
       {error && (
-        <Alert variant="light" color="red" title="Something went wrong">
+        <Alert variant="light" color="red" title="Oops!">
           <Flex direction="column" gap={getSpacingUnit(2)} align="flex-start">
             {error}
-            <Button
-              variant="filled"
-              color="blue"
-              onClick={() => window.location.reload()}
-            >
-              Retry
+            <Button variant="filled" color="blue" onClick={getRecipes}>
+              Try Again
             </Button>
           </Flex>
         </Alert>
       )}
-      <SimpleGrid cols={numberOfFeaturedRecipes}>
-        {loading ? (
-          <>
-            {Array(numberOfFeaturedRecipes)
-              .fill(0)
-              .map((_, index) => (
-                <FeaturedRecipesCard
-                  key={index}
-                  isLoading={true}
-                  {...defaultCardProps}
-                />
-              ))}
-          </>
-        ) : (
-          <>
-            {meals.map((meal: Meal) => {
-              const truncatedDescription =
-                meal.instructions.length > descriptionLength
-                  ? meal.instructions.slice(0, descriptionLength) + "..."
-                  : meal.instructions
-              return (
-                <FeaturedRecipesCard
-                  key={meal.id}
-                  id={meal.id}
-                  imageUrl={meal.thumbnail}
-                  title={meal.title}
-                  description={truncatedDescription}
-                  isLoading={false}
-                />
-              )
-            })}
-          </>
-        )}
+      <SimpleGrid cols={numberOfRecipes}>
+        {loading ? loadingCards : recipeCards}
       </SimpleGrid>
     </Flex>
   )
