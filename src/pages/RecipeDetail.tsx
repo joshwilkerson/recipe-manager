@@ -112,6 +112,7 @@ export const RecipeDetail = () => {
 
   useEffect(() => {
     fetchMeal()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   return (
