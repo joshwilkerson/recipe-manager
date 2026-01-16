@@ -1,13 +1,28 @@
 import { Recipe } from "../types"
 
 export const handleRecipeClick = (
-  recipe: Recipe,
+  recipeOrId: Recipe | { idMeal: string } | string,
   navigate: (path: string) => void
 ) => {
-  navigate(`/recipe/${recipe.idMeal}`)
+  const id = typeof recipeOrId === 'string' 
+    ? recipeOrId 
+    : 'idMeal' in recipeOrId 
+    ? recipeOrId.idMeal 
+    : recipeOrId
+  navigate(`/recipe/${id}`)
 }
 
-export const formatRecipeData = (data: any): Recipe => {
+interface RecipeData {
+  idMeal: string
+  strMeal: string
+  strMealThumb: string
+  strCategory: string
+  strArea: string
+  strInstructions: string
+  [key: string]: string
+}
+
+export const formatRecipeData = (data: RecipeData): Recipe => {
   return {
     idMeal: data.idMeal,
     strMeal: data.strMeal,

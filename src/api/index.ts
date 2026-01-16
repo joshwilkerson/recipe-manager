@@ -66,7 +66,15 @@ export const getMealByName = async (name: string): Promise<Meal[]> => {
       return []
     }
 
-    return data.meals.map((mealData: any) => {
+    interface MealResponse {
+      idMeal: string
+      strMeal: string
+      strMealThumb: string
+      strInstructions: string
+      [key: string]: string
+    }
+
+    return data.meals.map((mealData: MealResponse) => {
       const ingredients: string[] = []
       for (let i = 1; i <= 20; i++) {
         const ingredient = mealData[`strIngredient${i}`]
@@ -159,8 +167,14 @@ export const getMealByCategory = async (category: string): Promise<Meal[]> => {
       return []
     }
 
+    interface MealSummary {
+      idMeal: string
+      strMeal: string
+      strMealThumb: string
+    }
+
     const detailedMeals = await Promise.all(
-      data.meals.map(async (mealData: any) => {
+      data.meals.map(async (mealData: MealSummary) => {
         try {
           const detailedMeal = await getMealById(mealData.idMeal)
           return detailedMeal
@@ -186,11 +200,17 @@ export const getMealByCategory = async (category: string): Promise<Meal[]> => {
 }
 
 export const getMealByCuisine = async (cuisine: string): Promise<Meal[]> => {
+  interface MealSummary {
+    idMeal: string
+    strMeal: string
+    strMealThumb: string
+  }
+
   const response = await fetch(
     `https://www.themealdb.com/api/json/v1/1/filter.php?a=${cuisine}`
   )
   const data = await response.json()
-  return data.meals.map((meal: any) => ({
+  return data.meals.map((meal: MealSummary) => ({
     id: meal.idMeal,
     title: meal.strMeal,
     thumbnail: meal.strMealThumb,
@@ -205,8 +225,12 @@ export const getCuisines = async (): Promise<string[]> => {
     if (!response.ok) {
       throw new Error("Failed to fetch cuisines")
     }
+    interface AreaResponse {
+      strArea: string
+    }
+
     const data = await response.json()
-    return data.meals.map((meal: any) => meal.strArea)
+    return data.meals.map((meal: AreaResponse) => meal.strArea)
   } catch (error) {
     console.error("Error fetching cuisines:", error)
     throw error
@@ -226,7 +250,11 @@ export const getCategories = async (): Promise<string[]> => {
       return []
     }
 
-    return data.meals.map((category: any) => category.strCategory)
+    interface CategoryResponse {
+      strCategory: string
+    }
+
+    return data.meals.map((category: CategoryResponse) => category.strCategory)
   } catch (error) {
     console.error("Error fetching categories:", error)
     throw error
