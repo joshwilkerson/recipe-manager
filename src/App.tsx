@@ -9,7 +9,6 @@ import { RecipeDetail } from "./pages/RecipeDetail"
 import { ModalsProvider } from "@mantine/modals"
 import { CategoryList } from "./components/CategoryList/CategoryList"
 import { CuisineList } from "./components/CuisineList/CuisineList"
-import { Link } from "react-router-dom"
 
 const GlobalLayout = () => {
   return (

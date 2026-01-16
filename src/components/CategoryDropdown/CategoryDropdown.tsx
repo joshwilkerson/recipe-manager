@@ -1,26 +1,19 @@
 import { useState, useEffect } from "react"
-import { Select, Loader } from "@mantine/core"
+import { Select } from "@mantine/core"
 import { getCategories } from "../../api"
 import { useNavigate } from "react-router-dom"
 
 export const CategoryDropdown = () => {
   const [categories, setCategories] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCategories = async () => {
-      setLoading(true)
-      setError(null)
       try {
         const fetchedCategories = await getCategories()
         setCategories(fetchedCategories)
       } catch (error) {
-        setError("Error loading categories. Please try again.")
         console.error("Error fetching categories:", error)
-      } finally {
-        setLoading(false)
       }
     }
 

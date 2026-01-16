@@ -10,9 +10,8 @@ import {
   Alert,
   Button,
   Container,
-  Select,
 } from "@mantine/core"
-import { getMealByCuisine, getCategories } from "../../api"
+import { getMealByCuisine } from "../../api"
 import type { Meal } from "../../types"
 import styles from "./CuisineList.module.css"
 import { handleRecipeClick } from "../../shared/recipeUtils"
@@ -23,7 +22,6 @@ export const CuisineList = () => {
   const [meals, setMeals] = useState<Meal[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -47,26 +45,8 @@ export const CuisineList = () => {
     fetchMeals()
   }, [CuisineName])
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const fetchedCategories = await getCategories()
-        setCategories(fetchedCategories)
-      } catch (error) {
-        console.error("Error fetching categories:", error)
-      }
-    }
-    fetchCategories()
-  }, [])
-
   const onRecipeClick = (meal: Meal) => {
-    handleRecipeClick({ idMeal: meal.id, strMeal: meal.title } as any, navigate)
-  }
-
-  const handleCategoryChange = (value: string | null) => {
-    if (value) {
-      navigate(`/category/${value}`)
-    }
+    handleRecipeClick(meal.id, navigate)
   }
 
   if (!CuisineName) {
