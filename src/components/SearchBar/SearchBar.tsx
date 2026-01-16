@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useMemo } from "react"
 import debounce from "lodash/debounce"
 import { getMealByName } from "../../api"
 import type { Meal } from "../../types"
@@ -14,26 +14,25 @@ const SearchBar = () => {
   const [searchResults, setSearchResults] = useState<Meal[]>([])
   const navigate = useNavigate()
 
-  const searchMeals = async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults([])
-      return
-    }
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (query: string) => {
+        if (!query.trim()) {
+          setSearchResults([])
+          return
+        }
 
-    try {
-      setIsLoading(true)
-      const results = await getMealByName(query)
-      setSearchResults(results || [])
-    } catch (error) {
-      console.error("Error searching meals:", error)
-      setSearchResults([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const debouncedSearch = useCallback(
-    debounce((query: string) => searchMeals(query), 500),
+        try {
+          setIsLoading(true)
+          const results = await getMealByName(query)
+          setSearchResults(results || [])
+        } catch (error) {
+          console.error("Error searching meals:", error)
+          setSearchResults([])
+        } finally {
+          setIsLoading(false)
+        }
+      }, 500),
     []
   )
 
@@ -49,7 +48,7 @@ const SearchBar = () => {
   }
 
   const onRecipeClick = (meal: Meal) => {
-    handleRecipeClick({ idMeal: meal.id, strMeal: meal.title } as any, navigate)
+    handleRecipeClick(meal.id, navigate)
     handleClear()
   }
 
