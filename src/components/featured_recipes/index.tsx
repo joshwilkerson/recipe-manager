@@ -37,7 +37,7 @@ export const FeaturedRecipes = () => {
       }
 
       setMeals(recipes)
-    } catch (err) {
+    } catch {
       setError("Sorry, we couldn't load the recipes. Please try again.")
     } finally {
       setLoading(false)
@@ -46,6 +46,7 @@ export const FeaturedRecipes = () => {
 
   useEffect(() => {
     getRecipes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const emptyCard = {

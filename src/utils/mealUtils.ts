@@ -1,5 +1,9 @@
 // utils/mealUtils.ts
-export const extractIngredients = (mealData: any): string[] => {
+interface MealData {
+  [key: string]: string
+}
+
+export const extractIngredients = (mealData: MealData): string[] => {
   const ingredients: string[] = []
   for (let i = 1; i <= 20; i++) {
     const ingredient = mealData[`strIngredient${i}`]
